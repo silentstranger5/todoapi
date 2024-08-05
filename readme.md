@@ -62,7 +62,7 @@ Here is how you can register:
 curl --request POST \
     --header "Content-Type: application/json" \
     --data '{"username": "user", "password": "password"}' \
-    http://localhost:8000/register
+    http://localhost:8000/auth/register
 
 # {"message": "Registration is successful"}
 ```
@@ -73,7 +73,7 @@ Get your authentication token:
 curl --request POST \
     --header "Content-Type: application/json" \
     --data '{"username": "user", "password": "password"}' \
-    http://localhost:8000/token
+    http://localhost:8000/auth/token
 
 # {"access_token": "asdfiu0983jfoaiwhoq43ih.qfo98h4wfiuhq4of87houfao9834fh.OIUH087h3hfoijhOIH76034...", "token_type": "bearer"}
 ```
