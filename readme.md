@@ -54,6 +54,7 @@ To authenticate, you need to register as a user and then get your access token.
 After that, you need to set up header `Authorization: Bearer TOKEN`. Replace `TOKEN` with your 
 authorization token.
 You can try to send requests with `curl` utility.
+You can also use documentation to send requests as well.
 
 Here is how you can register:
 
