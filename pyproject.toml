@@ -1,0 +1,30 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "todo_api"
+version = "1.0.0"
+authors = [
+  { name="Nikita Smirnov", email="n.smirnov1572@gmail.com" }
+]
+description = "A simple TODO API"
+readme = "readme.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "fastapi[standard]",
+  "httpx",
+  "passlib[bcrypt]",
+  "psycopg[binary]",
+  "pyjwt",
+  "pytest",
+  "sqlalchemy"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["todo"]
