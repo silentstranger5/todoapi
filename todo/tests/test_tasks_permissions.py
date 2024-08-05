@@ -2,12 +2,24 @@ from .database_config import client, test_db
 from .test_tasks import get_token, get_guest_token
 
 
+def test_create_new_task(test_db):
+    token = get_token()
+    response = client.post (
+        "/tasks/create",
+        headers={"Authorization": f"Bearer {token}"},
+        json={"name": "Buy the groceries"},
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["message"] == "Task successfully created"
+
+
 def test_grant_permission(test_db):
     token = get_token()
     response = client.post(
         "/permissions/grant",
         headers={"Authorization": f"Bearer {token}"},
-        json={"username": "guest", "task_id": 1},
+        json={"username": "guest", "task_id": 2},
     )
     assert response.status_code == 200
     data = response.json()
@@ -29,7 +41,7 @@ def test_grant_permission_invalid_id(test_db):
 def test_grant_permission_no_token(test_db):
     response = client.post(
         "/permissions/grant",
-        json={"username": "guest", "task_id": 5},
+        json={"username": "guest", "task_id": 2},
     )
     assert response.status_code == 401
     data = response.json()
@@ -53,7 +65,7 @@ def test_grant_permission_not_author(test_db):
     response = client.post(
         "/permissions/grant",
         headers={"Authorization": f"Bearer {token}"},
-        json={"username": "user", "task_id": 1},
+        json={"username": "user", "task_id": 2},
     )
     assert response.status_code == 400
     data = response.json()
@@ -69,7 +81,7 @@ def test_get_tasks_read_permission(test_db):
     assert response.status_code == 200
     data = response.json()
     assert data["tasks"] == [
-        {"author_id": 1, "complete": True, "id": 1, "name": "Wash the dishes"}
+        {"author_id": 1, "complete": False, "id": 2, "name": "Buy the groceries"}
     ]
 
 
@@ -78,7 +90,7 @@ def test_update_task_no_permission(test_db):
     response = client.post(
         "/tasks/update",
         headers={"Authorization": f"Bearer {token}"},
-        json={"id": 1, "name": "Debug an old project" },
+        json={"id": 2, "name": "Throw out trash" },
     )
     assert response.status_code == 400
     data = response.json()
@@ -90,13 +102,13 @@ def test_update_task_with_permission(test_db):
     response = client.post(
         "/permissions/grant",
         headers={"Authorization": f"Bearer {token}"},
-        json={"username": "guest", "task_id": 1, "update": True},
+        json={"username": "guest", "task_id": 2, "update": True},
     )
     token = get_guest_token()
     response = client.post(
         "/tasks/update",
         headers={"Authorization": f"Bearer {token}"},
-        json={"id": 1, "name": "Debug an old project" },
+        json={"id": 2, "name": "Throw out trash" },
     )
     assert response.status_code == 200
     data = response.json()
@@ -108,7 +120,7 @@ def test_update_task_with_permission(test_db):
     assert response.status_code == 200
     data = response.json()
     assert data["tasks"] == [
-        {"author_id": 1, "complete": True, "id": 1, "name": "Debug an old project"}
+        {"author_id": 1, "complete": False, "id": 2, "name": "Throw out trash"}
     ]
 
 
@@ -117,7 +129,7 @@ def test_upgrade_task_boolean_only(test_db):
     response = client.post(
         "/tasks/update",
         headers={"Authorization": f"Bearer {token}"},
-        json={"id": 1, "complete": False },
+        json={"id": 2, "complete": True },
     )
     assert response.status_code == 200
     data = response.json()
@@ -129,7 +141,7 @@ def test_upgrade_task_boolean_only(test_db):
     assert response.status_code == 200
     data = response.json()
     assert data["tasks"] == [
-        {"author_id": 1, "complete": False, "id": 1, "name": "Debug an old project"}
+        {"author_id": 1, "complete": True, "id": 2, "name": "Throw out trash"}
     ]
 
 
@@ -138,7 +150,7 @@ def test_revoke_permission(test_db):
     response = client.post(
         "/permissions/revoke",
         headers={"Authorization": f"Bearer {token}"},
-        json={"username": "guest", "task_id": 1, "update": True},
+        json={"username": "guest", "task_id": 2},
     )
     assert response.status_code == 200
     data = response.json()

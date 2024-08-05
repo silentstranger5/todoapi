@@ -72,4 +72,4 @@ async def delete_task(
             detail="Task does not exist or you are not it's author"
         )
     crud.delete_task(db, task)
-    return {"message": "Task sucessfully deleted"}
+    return {"message": "Task successfully deleted"}

@@ -133,3 +133,15 @@ def test_update_task_no_access(test_db):
     assert response.status_code == 400
     data = response.json()
     assert data["detail"] == "You don't have permission to update this task"
+
+
+def test_task_delete(test_db):
+    token = get_token()
+    response = client.post(
+        "/tasks/delete",
+        headers={"Authorization": f"Bearer {token}"},
+        json={"id": 1}
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["message"] == "Task successfully deleted"

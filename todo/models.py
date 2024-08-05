@@ -36,7 +36,7 @@ class Permission(Base):
     id = Column(Integer, primary_key=True)
     update = Column(Boolean, default=False)
     user_id = Column(Integer, ForeignKey("users.id"))
-    task_id = Column(Integer, ForeignKey("tasks.id"))
+    task_id = Column(Integer, ForeignKey("tasks.id", ondelete="CASCADE"))
 
     user = relationship("User", back_populates="permission")
     task = relationship("Task", back_populates="permission")
